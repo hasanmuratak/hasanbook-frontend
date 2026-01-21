@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+/* =========================
+   THEME VARIABLES
+========================= */
+:root {
+  --bg: #f4f5f7;
+  --text: #111111;
+  --card: rgba(255, 255, 255, 0.96);
+  --input-bg: #ffffff;
+  --input-border: #bbbbbb;
+  --placeholder: #666666;
+}
+
+body.dark {
+  --bg: #020617;
+  --text: #e5e7eb;
+  --card: #0f172a;
+  --input-bg: #020617;
+  --input-border: #334155;
+  --placeholder: #94a3b8;
+}
+
+/* =========================
+   RESET
+========================= */
+* {
+  box-sizing: border-box;
+}
+
+/* =========================
+   BODY
+========================= */
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* =========================
+   CENTER
+========================= */
+.center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================
+   CARD
+========================= */
+.card {
+  width: 340px;
+  padding: 28px;
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.5s ease;
+}
+
+/* başlık */
+.card h2 {
+  margin-bottom: 22px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* =========================
+   INPUT
+========================= */
+.card input {
+  width: 100%;
+  padding: 13px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  font-size: 14px;
+  background: var(--input-bg);
+  color: var(--text);
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card input::placeholder {
+  color: var(--placeholder);
+}
+
+.card input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+}
+
+/* =========================
+   BUTTON
+========================= */
+.card button {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4f46e5, #6d28d9);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+.card button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* =========================
+   REGISTER TEXT
+========================= */
+.register-text {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.register-link {
+  margin-left: 6px;
+  color: #4f46e5;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
