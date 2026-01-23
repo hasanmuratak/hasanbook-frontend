@@ -28,7 +28,7 @@ export default function App() {
     const token = sessionStorage.getItem("token");
 
     if(token){
-      router.replace("/feed");
+      router.replace("/");
     }else {
       router.replace("/login");
     }

@@ -35,6 +35,10 @@ export default function ProfilePage() {
         posts: []
     });
 
+
+    const [ShowFollowers, setShowFollowers] = useState(false);
+    const [ShowFollowing, setShowFollowing] = useState(false);
+
     // 🔄 PROFİLİ ÇEK
     const fetchProfile = () => {
         fetch(`http://localhost:3001/users/${id}`)
@@ -121,8 +125,13 @@ export default function ProfilePage() {
 
 
                     <div className="profile-stats" >
-                        <span><b>{data.user.followers.length}</b> Followers</span>
-                        <span><b>{data.user.following.length}</b> Following</span>
+                        <span
+                            style={{ cursor: "pointer" }}
+                            onClick={() => setShowFollowers(true)}
+                        ><b>{data.user.followers.length}</b> Followers</span>
+                        <span 
+                            style={{ cursor: "pointer" }}
+                            onClick={() => setShowFollowing(true)}><b>{data.user.following.length}</b> Following</span>
                         <span><b>{data.posts.length}</b> Posts</span>
 
                     </div>
@@ -134,7 +143,96 @@ export default function ProfilePage() {
                         onChange={fetchProfile}
                     />
                 </div>
+
             </div>
+            {/*FOLLOWERS SHOW CARD :D */}
+
+            {ShowFollowers && (
+                <div
+                    className="followers-overlay"
+                    onClick={() => setShowFollowers(false)}
+                >
+                    <div
+                        className="followers-modal"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h3 className="followers-title">Takipçiler</h3>
+
+                        <div className="followers-list">
+                            {data.user.followers.map((f) => (
+                                <div
+                                    key={f._id}
+                                    className="followers-item"
+                                    onClick={() => {
+                                        setShowFollowers(false);
+                                        router.push(`/profile/${f._id}`);
+                                    }}
+                                >
+                                    <img
+                                        src={
+                                            f.avatar
+                                                ? `http://localhost:3001/uploads/${f.avatar}`
+                                                : "/avatars/default.jpg"
+                                        }
+                                        alt={f.username}
+                                        className="followers-avatar"
+                                    />
+                                    <span className="followers-username">
+                                        {f.username}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* FOLLOWING FACE CARDD :D */}
+
+            {/*FOLLOWERS SHOW CARD :D */}
+
+            {ShowFollowing && (
+                <div
+                    className="followers-overlay"
+                    onClick={() => setShowFollowing(false)}
+                >
+                    <div
+                        className="followers-modal"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h3 className="followers-title">Takip Edilenler</h3>
+
+                        <div className="followers-list">
+                            {data.user.following.map((f) => (
+                                <div
+                                    key={f._id}
+                                    className="followers-item"
+                                    onClick={() => {
+                                        setShowFollowing(false);
+                                        router.push(`/profile/${f._id}`);
+                                    }}
+                                >
+                                    <img
+                                        src={
+                                            f.avatar
+                                                ? `http://localhost:3001/uploads/${f.avatar}`
+                                                : "/avatars/default.jpg"
+                                        }
+                                        alt={f.username}
+                                        className="followers-avatar"
+                                    />
+                                    <span className="followers-username">
+                                        {f.username}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+
+
             {/* KENDİ PROFİLİ */}
             {currentUserId === data.user._id && (
                 <Button
