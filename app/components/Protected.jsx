@@ -1,6 +1,6 @@
 export default function Protected({ children }) {
   if (typeof window !== "undefined") {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!token) return <p>Giriş yapman gerekiyor</p>;
   }
 

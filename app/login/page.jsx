@@ -26,7 +26,7 @@ export default function Login() {
       console.log("LOGIN RESPONSE:", res);
 
       if (res.token) {
-        localStorage.setItem("token", res.token);
+        sessionStorage.setItem("token", res.token);
         router.push("/"); // 🔥 FEED
       } else {
         alert(res.message || "Login başarısız");

@@ -13,7 +13,7 @@ export default function EditProfilePage() {
   const [token, setToken] = useState(null);
  
   useEffect(() => {
-    const t = localStorage.getItem("token");
+    const t = sessionStorage.getItem("token");
     setToken(t);
   }, []);
 

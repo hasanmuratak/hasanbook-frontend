@@ -18,7 +18,7 @@ export default function ProfilePage() {
 
     // 🔐 Giriş yapan kullanıcı ID
     const token =
-        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
     const currentUserId = token ? jwtDecode(token).id : null;
 
     // 🧠 STABLE INITIAL STATE

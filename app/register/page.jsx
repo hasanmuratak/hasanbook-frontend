@@ -29,7 +29,7 @@ export default function Register() {
       }
 
       // 🔥 AUTO LOGIN
-      localStorage.setItem("token", data.token);
+      sessionStorage.setItem("token", data.token);
       setEmail("");
       setPassword("");
       router.push("/"); // FEED

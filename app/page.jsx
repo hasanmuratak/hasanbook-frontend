@@ -20,14 +20,30 @@ export default function App() {
   const currentUserId = token ? jwtDecode(token).id : null;
   const [sidebarOpen, setSidebarOpen] = useState(true);
   useEffect(() => {
-    const savedToken = localStorage.getItem("token");
+    const savedToken = sessionStorage.getItem("token");
     if (savedToken) setToken(savedToken);
   }, []);
+
+  useEffect(()=>{
+    const token = sessionStorage.getItem("token");
+
+    if(token){
+      router.replace("/feed");
+    }else {
+      router.replace("/login");
+    }
+
+
+
+  },[]);
+
+
 
   useEffect(() => {
     if (!token) return;
     loadPosts();
   }, [token]);
+
 
   const loadPosts = async () => {
     const data = await getPosts();

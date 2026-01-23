@@ -27,7 +27,7 @@ export default function FollowButton({
 
                 }, {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                        Authorization: `Bearer ${sessionStorage.getItem("token")}`
                     }
                 })
                 setIsFollowing(false);
@@ -36,7 +36,7 @@ export default function FollowButton({
 
                 }, {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                        Authorization: `Bearer ${sessionStorage.getItem("token")}`
                     }
                 });
                 setIsFollowing(true);

@@ -30,7 +30,7 @@ export default function Navbar() {
     }, []);
 
     const logout = () => {
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         router.push("/login");
     };
 

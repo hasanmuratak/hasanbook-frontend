@@ -80,7 +80,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 
 export default function Sidebar({ open }) {
   const { theme, toggleTheme } = useTheme();
-  const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+  const token = typeof window !== 'undefined' ? sessionStorage.getItem("token") : null;
   const currentUserId = token ? jwtDecode(token).id : null;
 
   const muiTheme = useMuiTheme();

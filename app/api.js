@@ -44,7 +44,7 @@ export const createPost = async (formData, token) => {
 //   return response.json();
 // }
 export const deletePostApi = async (id) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const res = await fetch(`http://localhost:3001/posts/${id}`, {
     method: "DELETE",
@@ -158,7 +158,7 @@ const res = await fetch(
 // });
 
 // api.interceptors.request.use((config) => {
-//   const token = localStorage.getItem("token");
+//   const token = sessionStorage.getItem("token");
 //   if (token) {
 //     config.headers.Authorization = `Bearer ${token}`;
 //   }
