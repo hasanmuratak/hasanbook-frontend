@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import FollowButton from "../../components/FollowButton";
 import { useTheme } from "../../context/ThemeContext";
-
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import "./profile.css";
 
 export default function ProfilePage() {
@@ -129,7 +129,7 @@ export default function ProfilePage() {
                             style={{ cursor: "pointer" }}
                             onClick={() => setShowFollowers(true)}
                         ><b>{data.user.followers.length}</b> Followers</span>
-                        <span 
+                        <span
                             style={{ cursor: "pointer" }}
                             onClick={() => setShowFollowing(true)}><b>{data.user.following.length}</b> Following</span>
                         <span><b>{data.posts.length}</b> Posts</span>
@@ -141,6 +141,24 @@ export default function ProfilePage() {
                         myUserId={currentUserId}
                         followers={data.user.followers}
                         onChange={fetchProfile}
+                    />
+                    <MailOutlineIcon
+                        style={{ cursor: "pointer", marginLeft: 10 }}
+                        onClick={async () => {
+                            const res = await fetch("http://localhost:3001/chats", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`
+                                },
+                                body: JSON.stringify({ userId: data.user._id })
+                            });
+
+                            const chat = await res.json();
+                            router.push(`/messages/${chat._id}`);
+                        }}
+
+
                     />
                 </div>
 
