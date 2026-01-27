@@ -1,0 +1,66 @@
+/* ANA LAYOUT */
+.messages-layout {
+  display: flex;
+  height: 100vh;
+  background-color: #0f172a; /* koyu arka plan */
+  color: #e5e7eb;
+  overflow: hidden;
+}
+
+/* SOL CHAT LIST */
+.chat-list {
+  width: 320px;
+  background-color: #020617;
+  border-right: 1px solid #1e293b;
+  overflow-y: auto;
+}
+
+/* CHAT ITEM */
+.chat-item {
+  padding: 14px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #1e293b;
+  transition: background 0.15s;
+}
+
+.chat-item:hover {
+  background-color: #020617;
+}
+
+.chat-item.active {
+  background-color: #020617;
+}
+
+/* CHAT TITLE */
+.chat-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* LAST MESSAGE */
+.chat-last {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* SAĞ TARAF CONTENT */
+.messages-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #020617;
+}
+
+/* BOŞ SAYFA */
+.messages-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  font-size: 15px;
+}

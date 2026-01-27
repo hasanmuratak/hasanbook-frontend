@@ -145,7 +145,7 @@ export default function ProfilePage() {
                     <MailOutlineIcon
                         style={{ cursor: "pointer", marginLeft: 10 }}
                         onClick={async () => {
-                            const res = await fetch("http://localhost:3001/chats", {
+                            const res = await fetch("http://localhost:3001/messages", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",

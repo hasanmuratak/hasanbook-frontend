@@ -19,9 +19,9 @@ import { useTheme as useMuiTheme } from "@mui/material/styles";
 import ContrastTwoToneIcon from '@mui/icons-material/ContrastTwoTone';
 import Badge from "@mui/material/Badge";
 import Tooltip from "@mui/material/Tooltip";
-
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import NotificationsIcon from "@mui/icons-material/Notifications";
-
+import { useRouter } from "next/navigation";
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
   height: 34,
@@ -84,13 +84,13 @@ export default function Sidebar({ open }) {
   const currentUserId = token ? jwtDecode(token).id : null;
 
   const muiTheme = useMuiTheme();
-  const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("lg"));
   //xs  → telefon
   //sm  → küçük tablet
   //md  → laptop sınırı
   //lg  → büyük ekran
 
- 
+  const router = useRouter();
 
 
   if (!open) return null;
@@ -148,7 +148,25 @@ export default function Sidebar({ open }) {
         </Box>
       </Link>
 
-
+              {/* MESAJLAR */}
+      <Link
+        href="/messages"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <Box
+          onClick={() => router.push("/messages")}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: isMobile ? "center" : "flex-start",
+            gap: isMobile ? 0 : 1,
+            cursor: "pointer",
+          }}
+        >
+          <MailOutlineIcon />
+          {!isMobile && <Typography fontWeight={600}>Mesajlar</Typography>}
+        </Box>
+      </Link>
 
 
       <Link href="/notifications" style={{ textDecoration: "none", color: "inherit" }}>
@@ -167,7 +185,7 @@ export default function Sidebar({ open }) {
       </Link>
 
 
-    
+
 
 
 

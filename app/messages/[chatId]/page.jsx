@@ -1,175 +1,134 @@
 "use client";
 
-
 import { jwtDecode } from "jwt-decode";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import "../../globals.css";
-
+import "./chat.css";
 
 export default function ChatPage() {
+  const { chatId } = useParams();
+  const router = useRouter();
 
-    const { chatId } = useParams();
-    const router = useRouter();
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [token, setToken] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
-    const token = sessionStorage.getItem("token");
+  /* 🔐 TOKEN (SADECE CLIENT) */
+  useEffect(() => {
+    const t = sessionStorage.getItem("token");
+    if (!t) {
+      router.push("/login");
+      return;
+    }
 
-    const currentUserId = token ? jwtDecode(token).id : null;
+    setToken(t);
+    setCurrentUserId(jwtDecode(t).id);
+    setMounted(true);
+  }, [router]);
 
-    const [messages, setMessages] = useState([]);
-    const [newMessage, setNewMessage] = useState("");
+  /* 📥 MESAJLARI ÇEK */
+  const fetchMessages = useCallback(async () => {
+    if (!chatId || !token) return;
 
-    useEffect(() => {
-        if (!token) {
-            router.push("/login");
+    try {
+      const res = await fetch(
+        `http://localhost:3001/messages/${chatId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
-    }, [token]);
+      );
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
+
+      const data = await res.json();
+      setMessages(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("FETCH MESSAGES ERROR:", err.message);
+    }
+  }, [chatId, token]);
+  
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
 
 
 
-    const sendMessage = async () => {
 
-        const response = await fetch("http://localhost:3001/messages", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                roomId: chatId,
-                text: newMessage,
-            })
+  /* 📤 MESAJ GÖNDER */
+  const sendMessage = async () => {
+    if (!newMessage.trim() || !token) return;
+
+    try {
+      const res = await fetch("http://localhost:3001/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          roomId: chatId,
+          text: newMessage,
+        }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
+
+      const savedMessage = await res.json();
+
+      setMessages((prev) =>
+        prev.some((m) => m._id === savedMessage._id)
+          ? prev
+          : [...prev, savedMessage]
+      );
+
+      setNewMessage("");
+    } catch (err) {
+      console.error("SEND MESSAGE ERROR:", err.message);
+    }
+  };
 
 
-        })
-        setNewMessage("");
+  /* 🧱 HYDRATION GUARD */
 
-    };
+  if (!mounted) return null;
+  return (
+    <div className="chat-container">
+      <div className="chat-header">Chat ID: {chatId}</div>
 
-    useEffect(() => {
-        // fetch messages for this chat bla bla bla
+      <div className="chat-messages">
+        {messages.map((m) => {
+          const isMe =
+            m.sender?._id?.toString() === currentUserId?.toString();
 
-        fetch(`http://localhost:3001/messages/${chatId}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-            .then(res => res.json())
-            .then(data => setMessages(data))
-            .catch(err => console.error("Mesajlar alınırken hata oluştu:", err));
-    }, [chatId,sendMessage]);
-
-
-    return (
-        <div className="chat-container">
-            <div className="chat-header">
-                Chat ID: {chatId}
+          return (
+            <div
+              key={m._id}
+              className={`message ${isMe ? "me" : "other"}`}
+            >
+              <div className="username">{m.sender?.username}</div>
+              <div className="text">{m.text}</div>
             </div>
+          );
+        })}
+      </div>
 
-            <div className="chat-messages">
-                {messages.map((m) => (
-                    <div
-                        key={m._id}
-                        className={`message ${m.sender?._id === currentUserId ? "me" : "other"
-                            }`}
-                    >
-                        <div className="username">
-                            {m.sender?.username}
-                        </div>
-                        {m.text}
-                    </div>
-                ))}
-            </div>
-
-            <div className="chat-input">
-                <input
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                    placeholder="Mesaj yaz..."
-                />
-                <button onClick={sendMessage}>Gönder</button>
-            </div>
-        </div>
-    );
-
-
-
+      <div className="chat-input">
+        <input
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+          placeholder="Mesaj yaz..."
+        />
+        <button onClick={sendMessage}>Gönder</button>
+      </div>
+    </div>
+  );
 }
-
-//"use client";
-
-// import { jwtDecode } from "jwt-decode";
-// import { useEffect, useState } from "react";
-// import { useParams, useRouter } from "next/navigation";
-
-// export default function ChatPage() {
-//   const { chatId } = useParams();
-//   const router = useRouter();
-
-//   const token = sessionStorage.getItem("token");
-//   const currentUserId = token ? jwtDecode(token).id : null;
-
-//   const [messages, setMessages] = useState([]);
-//   const [newMessage, setNewMessage] = useState("");
-
-//   // auth kontrol
-//   useEffect(() => {
-//     if (!token) router.push("/login");
-//   }, [token]);
-
-//   // mesajları çek
-//   useEffect(() => {
-//     if (!chatId) return;
-
-//     fetch(`http://localhost:3001/messages/${chatId}`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     })
-//       .then((res) => res.json())
-//       .then(setMessages)
-//       .catch(console.error);
-//   }, [chatId]);
-
-//   // mesaj gönder
-//   const sendMessage = async () => {
-//     if (!newMessage.trim()) return;
-
-//     await fetch("http://localhost:3001/messages", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`,
-//       },
-//       body: JSON.stringify({
-//         roomId: chatId,
-//         text: newMessage,
-//       }),
-//     });
-
-//     setNewMessage("");
-//   };
-
-//   return (
-//     <div>
-//       <h1>Chat ID: {chatId}</h1>
-
-//       {messages.map((m) => (
-//         <li key={m._id}>
-//           {m.sender?.username}: {m.text}
-//         </li>
-//       ))}
-
-//       <input
-//         value={newMessage}
-//         onChange={(e) => setNewMessage(e.target.value)}
-//         onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-//         placeholder="Mesaj yaz.."
-//       />
-
-//       <button onClick={sendMessage}>Gönder</button>
-//     </div>
-//   );
-// }
